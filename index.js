@@ -1,12 +1,15 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const app = express();
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
 
 app.use(cors());
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
+const jsonParser = bodyParser.json();
 
 app.use('/public', express.static(`${process.cwd()}/public`));
 
@@ -18,6 +21,12 @@ app.get('/', function(req, res) {
 app.get('/api/hello', function(req, res) {
   res.json({ greeting: 'hello API' });
 });
+
+app.post('/api/shorturl', urlencodedParser, (req, res) => {
+  console.log(req.body);
+  res.json({ original_url: req.body.url, short_url: 1 });
+});
+  
 
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
