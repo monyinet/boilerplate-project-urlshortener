@@ -3,7 +3,9 @@ const express = require('express');
 const cors = require('cors');
 const dns = require('dns');
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
 const app = express();
+
 
 
 // Basic Configuration
@@ -13,6 +15,7 @@ function isValidUrl(url) {
   return /^(http|https):\/\/[^ "]+$/.test(url);
 }
 
+app.use(morgan('dev'));
 app.use(cors());
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 const jsonParser = bodyParser.json();
