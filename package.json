@@ -2,7 +2,8 @@
   "name": "shorturl",
   "version": "0.0.3",
   "description": "API project for freeCodeCamp",
-  "main": "index.js",
+	"type": "module",
+  "exports": "./index.js",	
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js"
@@ -12,6 +13,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "lowdb": "^5.0.5",
     "morgan": "^1.10.0"
   },
   "license": "MIT",
