@@ -6,35 +6,35 @@ import bodyParser from 'body-parser';
 import morgan from 'morgan';
 const app = express();
 
-import { join, dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
-
-import { Low } from 'lowdb'
-import { JSONFile } from 'lowdb/node'
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { Low } from 'lowdb';
+import { JSONFile } from 'lowdb/node';
 
 // File path
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const file = join(__dirname, 'db.json')
+const file = join(__dirname, 'db.json');
 
 // Configure lowdb to write to JSONFile
-const adapter = new JSONFile(file)
-const db = new Low(adapter)
+const adapter = new JSONFile(file);
+const db = new Low(adapter);
 
 // Read data from JSON file, this will set db.data content
-await db.read()
+await db.read();
 
 // If db.json doesn't exist, db.data will be null
 // Use the code below to set default data
 // db.data = db.data || { posts: [] } // For Node < v15.x
-db.data ||= { posts: [] }             // For Node >= 15.x
+db.data ||= { urls: [] }             // For Node >= 15.x
 
 // Create and query items using native JS API
-db.data.posts.push('hello world')
-const firstPost = db.data.posts[0]
+// db.data.posts.push('hello world')
+// const firstPost = db.data.posts[0]
 
 // Alternatively, you can also use this syntax if you prefer
-const { posts } = db.data
-posts.push('hello world')
+const { urls } = db.data
+// urls.push({original_url: 'google.es', short_url: urls.length + 1 });
+// posts.push('hello world')
 
 // Finally write db.data content to file
 await db.write()
@@ -70,8 +70,9 @@ app.post('/api/shorturl', urlencodedParser, (req, res, next) => {
   console.log(checkUrl);
   if (checkUrl) {		
     try {
-      dns.lookup(url, (err, address, family) => {				
-        err == null ? res.json({ error: 'invalid URL' }) : res.json({ original_url: url, short_url: 1 });         
+      dns.lookup(url, (err, address, family) => {
+        urls.push({ original_url: url, short_url: urls.length + 1 });
+        err == null ? res.json({ error: 'invalid URL' }) : res.json({ original_url, short_url });         
       });
     } catch (error) {
       res.json({ error: 'invalid url' });
