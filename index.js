@@ -10,7 +10,6 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Low } from 'lowdb';
 import { JSONFile } from 'lowdb/node';
-// import lodash from 'lodash';
 
 // File path
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -101,6 +100,14 @@ app.post('/api/shorturl', urlencodedParser, async (req, res, next) => {
 
 app.get('/api/shorturl/:id', (req, res) => {
 	let id = req.params.id;
+	// console.log(id);
+	// function findShortUrl(id) {
+	// 	return urls.short_url === id;
+	// }
+	// console.log(urls);
+	// console.log(urls.find(findShortUrl));
+	const result = urls.find(({ short_url }) => short_url == id);
+	// console.log(result.original_url);
 	
 	// console.log(id);
 	// console.log(urls);
@@ -111,6 +118,7 @@ app.get('/api/shorturl/:id', (req, res) => {
 	// let findURLById = db.data.find(url => url['short_url'] === id);
 	// console.log(findURLById);
 	// res.redirect(findURLById.original_url);
+	res.redirect(result.original_url); 
 });
 
 app.listen(port, function() {
