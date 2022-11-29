@@ -1,3 +1,16 @@
 {
-  "urls": []
+  "urls": [
+    {
+      "original_url": "https://www.freecodecamp.org/",
+      "short_url": 1
+    },
+    {
+      "original_url": "https://boilerplate-project-urlshortener.monyinet.repl.co/?v=1669515915477",
+      "short_url": 2
+    },
+    {
+      "original_url": "https://boilerplate-project-urlshortener.monyinet.repl.co/?v=1669515915759",
+      "short_url": 3
+    }
+  ]
 }

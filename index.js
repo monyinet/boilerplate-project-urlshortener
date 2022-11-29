@@ -10,6 +10,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Low } from 'lowdb';
 import { JSONFile } from 'lowdb/node';
+// import lodash from 'lodash';
 
 // File path
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -25,7 +26,7 @@ await db.read();
 // If db.json doesn't exist, db.data will be null
 // Use the code below to set default data
 // db.data = db.data || { posts: [] } // For Node < v15.x
-db.data ||= { urls: [] }             // For Node >= 15.x
+db.data ||= { urls: [] }	           // For Node >= 15.x
 
 // Create and query items using native JS API
 // db.data.posts.push('hello world')
@@ -47,6 +48,13 @@ function isValidUrl(url) {
   return /^(http|https):\/\/[^ "]+$/.test(url);
 }
 
+async function addUrlToDb(str) {
+	db.data
+	.urls
+	.push({ original_url: str, short_url: urls.length + 1 });
+	await db.write();
+}
+
 app.use(morgan('dev'));
 app.use(cors());
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
@@ -63,17 +71,26 @@ app.get('/api/hello', function(req, res) {
   res.json({ greeting: 'hello API' });
 });
 
-app.post('/api/shorturl', urlencodedParser, (req, res, next) => {
-  // console.log(req.body);
-  const url = req.body.url;
-  const checkUrl = isValidUrl(url);
-  console.log(checkUrl);
-  if (checkUrl) {		
+app.post('/api/shorturl', urlencodedParser, async (req, res, next) => {
+  // console.log(req.body.url);
+  const getURL = req.body.url;
+  console.log(getURL);
+  const checkURL = isValidUrl(getURL);
+  console.log(checkURL);
+  if (checkURL) {		
+		// addUrlToDb(getURL);
+			// console.log(urls[urls.length + 1]['short_url']);
+			// console.log(urls['short_url']);
+			// console.log(urls.original_url);
+			// console.log(urls.short_url);
+			// console.log(urls['original_url']);
+			// console.log(urls['short_url']);
     try {
-      dns.lookup(url, (err, address, family) => {
-        urls.push({ original_url: url, short_url: urls.length + 1 });
-        err == null ? res.json({ error: 'invalid URL' }) : res.json({ original_url, short_url });         
-      });
+			// dns.lookup(url, (err, address, family) => {
+			// console.log(url);
+			// err == null ? res.json({ error: 'invalid URL' }) : res.json({ original_url : 'https://freeCodeCamp.org', short_url : 1});         
+			res.json({ original_url : getURL, short_url : 1});         
+			// };
     } catch (error) {
       res.json({ error: 'invalid url' });
     }
@@ -84,10 +101,16 @@ app.post('/api/shorturl', urlencodedParser, (req, res, next) => {
 
 app.get('/api/shorturl/:id', (req, res) => {
 	let id = req.params.id;
-	if (id == 1) {
-		res.redirect('freecodecamp.org')
-	}
-	console.log(id);
+	
+	// console.log(id);
+	// console.log(urls);
+	// console.log(urls[id + 1]);
+	// let getURL = JSON.parse(db.data);
+	// console.log(urls);
+	
+	// let findURLById = db.data.find(url => url['short_url'] === id);
+	// console.log(findURLById);
+	// res.redirect(findURLById.original_url);
 });
 
 app.listen(port, function() {
